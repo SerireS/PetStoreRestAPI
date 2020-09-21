@@ -40,7 +40,7 @@ namespace PetShop.Infrastructure.Data
             var pet1 = new Pet
             {
                 Name = "John",
-                Type = petType1, 
+                Type = "Dog", 
                 BirthDate = new DateTime(2020, 10, 10),
                 SoldDate = new DateTime(2020, 10, 10),
                 Color = "green",

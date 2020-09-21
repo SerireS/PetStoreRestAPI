@@ -7,12 +7,12 @@ namespace PetShop.Core.ApplicationServices
 {
     public interface IPetService
     {
-        Pet NewPet(string name, PetType type, DateTime birthDate, DateTime soldDate, string color,
+        Pet NewPet(string name, string type, DateTime birthDate, DateTime soldDate, string color,
             string previousOwner, double price);
 
         Pet CreatePet(Pet pet);
         List<Pet> GetPets();
-        List<Pet> GetAllByType(PetType type);
+        List<Pet> GetAllByType(string type);
         List<Pet> GetAllByPrice();
         List<Pet> GetFiveCheapestPets();
         List<Pet> GetAllByColor(string color);

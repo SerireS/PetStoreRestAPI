@@ -35,11 +35,6 @@ namespace PetShop.RestAPI.Controllers
                 return StatusCode(500, "id must be above 0");
             }
 
-            if (id != null)
-            {
-                return _petTypeService.FindPetByIdIncludeType(id);
-            }
-
             return StatusCode(404, "Not Found");
         }
 
@@ -62,6 +57,13 @@ namespace PetShop.RestAPI.Controllers
         public void Delete(int id)
         {
             _petTypeService.DeletePetType(id);
+        }
+
+        [HttpGet("{type}")]
+        [Route("[action]/{type}")]
+        public ActionResult<List<PetType>> GetFilteredType(string type)
+        {
+            return _petTypeService.GetAllByType(type);
         }
     }
 }

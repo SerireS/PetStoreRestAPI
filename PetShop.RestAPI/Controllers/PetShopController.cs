@@ -54,5 +54,12 @@ namespace PetShop.RestAPI.Controllers
         {
             _petService.DeletePet(id);
         }
+
+        [HttpGet("{type}")]
+        [Route("[action]/{type}")]
+        public ActionResult<List<Pet>> GetFiltered(string type)
+        {
+            return _petService.GetAllByType(type);
+        }
     }
 }

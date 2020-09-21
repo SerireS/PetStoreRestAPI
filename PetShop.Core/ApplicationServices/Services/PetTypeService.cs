@@ -37,12 +37,6 @@ namespace PetShop.Core.ApplicationServices.Services
             return _petTypeRepo.ReadPetType().ToList();
         }
 
-        public PetType FindPetByIdIncludeType(int id)
-        {
-            var petType = _petTypeRepo.ReadById(id);
-            petType.Pets = _petRepo.ReadPets().Where(pet => pet.Type.Id == petType.Id).ToList();
-            return petType;
-        }
 
         public PetType FindPetTypeById(int id)
         {
@@ -59,6 +53,14 @@ namespace PetShop.Core.ApplicationServices.Services
         public PetType DeletePetType(int id)
         {
             return _petTypeRepo.Delete(id);
+        }
+
+        public List<PetType> GetAllByType(string type)
+        {
+            var list = _petTypeRepo.ReadPetType();
+            var query = list.Where(petType => petType.Type.Equals(type));
+            query.OrderBy(petType => petType.Type);
+            return query.ToList();
         }
     }
 }

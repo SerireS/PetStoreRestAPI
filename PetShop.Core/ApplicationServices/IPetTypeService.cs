@@ -11,9 +11,9 @@ namespace PetShop.Core.ApplicationServices
 
         PetType CreatePetType(PetType petType);
         List<PetType> GetPetTypes();
-        PetType FindPetByIdIncludeType(int id);
         PetType FindPetTypeById(int id);
         PetType UpdatePetType(PetType updatePetType);
         PetType DeletePetType(int id);
+        List<PetType> GetAllByType(string type);
     }
 }

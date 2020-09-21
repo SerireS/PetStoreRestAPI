@@ -56,5 +56,12 @@ namespace PetShop.RestAPI.Controllers
         {
             _ownerService.DeleteOwner(id);
         }
+
+        [HttpGet("{name}")]
+        [Route("[action]/{name}")]
+        public ActionResult<List<Owner>> GetFilteredOwner(string name)
+        {
+            return _ownerService.GetAllByName(name);
+        }
     }
 }
