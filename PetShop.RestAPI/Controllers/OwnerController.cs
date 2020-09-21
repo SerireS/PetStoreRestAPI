@@ -24,44 +24,106 @@ namespace PetShop.RestAPI.Controllers
 
         // GET: api/<OwnerController>
         [HttpGet]
-        public IEnumerable<Owner> Get()
+        public ActionResult<IEnumerable<Owner>> Get()
         {
-            return _ownerService.GetOwners();
+            try
+            {
+                return Ok(_ownerService.GetOwners());
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Smth Went Wrong");
+            }
         }
 
         // GET api/<OwnerController>/5
         [HttpGet("{id}")]
-        public Owner Get(int id)
+        public ActionResult<Owner> Get(int id)
         {
-            return _ownerService.FindOwnerById(id);
+            var ownerId = _ownerService.FindOwnerById(id);
+            if (ownerId == null)
+            {
+                return StatusCode(404, "Id Must Be Above 0");
+            }
+
+            try
+            {
+                return Ok(ownerId);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Smth Went Wrong");
+            }
         }
 
         // POST api/<OwnerController>
         [HttpPost]
-        public void Post([FromBody] Owner owner)
+        public ActionResult<Owner> Post([FromBody] Owner owner)
         {
-            _ownerService.CreateOwner(owner);
+            if (string.IsNullOrEmpty(owner.Name))
+            {
+                return BadRequest("Enter A Name");
+            }
+
+            if (string.IsNullOrEmpty(owner.Address))
+            {
+                return BadRequest("Enter A Address");
+            }
+            return Ok(_ownerService.CreateOwner(owner));
         }
 
         // PUT api/<OwnerController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Owner owner)
+        public ActionResult<Owner> Put(int id, [FromBody] Owner owner)
         {
-            _ownerService.UpdateOwner(owner);
+            var updateOwner =_ownerService.UpdateOwner(owner);
+            if (updateOwner == null)
+            {
+                return StatusCode(404, "Owner Was Not Found");
+            }
+
+            try
+            {
+                return Ok(updateOwner);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Smth Went Wrong");
+            }
         }
 
         // DELETE api/<OwnerController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<Owner> Delete(int id)
         {
-            _ownerService.DeleteOwner(id);
+            var owner = _ownerService.DeleteOwner(id);
+            if (owner == null)
+            {
+                return StatusCode(404, "Owner With Id " + id + "Was Not Found");
+            }
+
+            try
+            {
+                return Ok(owner);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Smth Went Wrong");
+            }
         }
 
         [HttpGet("{name}")]
         [Route("[action]/{name}")]
         public ActionResult<List<Owner>> GetFilteredOwner(string name)
         {
-            return _ownerService.GetAllByName(name);
+            try
+            {
+                return Ok(_ownerService.GetAllByName(name));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Smth Went Wrong");
+            }
         }
     }
 }

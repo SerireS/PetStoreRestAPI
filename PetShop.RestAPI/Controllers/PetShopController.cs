@@ -22,44 +22,112 @@ namespace PetShop.RestAPI.Controllers
         }
         // GET: api/<PetShopController>
         [HttpGet]
-        public IEnumerable<Pet> Get()
+        public ActionResult<IEnumerable<Pet>> Get()
         {
-            return _petService.GetPets();
+            var petList = _petService.GetPets();
+            if (petList.Count == 0)
+            {
+                return NoContent();
+            }
+
+            try
+            {
+                return Ok(petList);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Smth Went Wrong");
+            }
         }
 
         // GET api/<PetShopController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Pet> Get(int id)
         {
-            return "value";
+            var petId = _petService.FindPetById(id);
+            if (petId == null)
+            {
+                return StatusCode(404, "Id Must Be Above 0");
+            }
+            try
+            {
+                return Ok(petId);
+            }
+            catch (Exception)
+            {
+               return StatusCode(500, "Smth Went Wrong");
+            }
         }
 
         // POST api/<PetShopController>
         [HttpPost]
-        public void Post([FromBody] Pet pet)
+        public ActionResult<Pet> Post([FromBody] Pet pet)
         {
-            _petService.CreatePet(pet);
+            if (string.IsNullOrEmpty(pet.Name))
+            {
+                return BadRequest("Enter PetName");
+            }
+
+            if (string.IsNullOrEmpty(pet.Color))
+            {
+                return BadRequest("Enter PetColor");
+            }
+            return Ok(_petService.CreatePet(pet));
         }
 
         // PUT api/<PetShopController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Pet pet)
+        public ActionResult<Pet> Put(int id, [FromBody] Pet pet)
         {
-          _petService.UpdatePet(pet);
+          var updatePet = _petService.UpdatePet(pet);
+          if (updatePet == null)
+          {
+              return StatusCode(404, "Pet Was Not Found");
+          }
+
+          try
+          {
+              return Ok(updatePet);
+          }
+          catch (Exception)
+          {
+              return StatusCode(500, "Smth Went Wrong");
+          }
         }
 
         // DELETE api/<PetShopController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<Pet> Delete(int id)
         {
-            _petService.DeletePet(id);
+            var petId = _petService.DeletePet(id);
+            if (petId == null)
+            {
+                StatusCode(404, "Id Must Be Above 0");
+            }
+
+            try
+            {
+                return Ok(petId);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Smth Went Wrong");
+            }
         }
 
         [HttpGet("{type}")]
         [Route("[action]/{type}")]
         public ActionResult<List<Pet>> GetFiltered(string type)
         {
-            return _petService.GetAllByType(type);
+            try
+            { 
+                return Ok(_petService.GetAllByType(type));
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Smth Went Wrong");
+            }
+            
         }
     }
 }
